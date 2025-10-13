@@ -116,18 +116,51 @@ try {
     }
     
     .gradient-bg {
-        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        background: linear-gradient(135deg, #000000 0%, #1a0000 25%, #2d0000 50%, #1a0000 75%, #000000 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 8s ease infinite;
+    }
+    
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
     .hero-gradient {
-        background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f97316 100%);
+        background: linear-gradient(135deg, #dc2626 0%, #ef4444 25%, #f97316 50%, #dc2626 75%, #ef4444 100%);
+        background-size: 200% 200%;
+        animation: heroPulse 3s ease infinite;
+    }
+    
+    @keyframes heroPulse {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
     .card-premium {
-        background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        background: linear-gradient(145deg, rgba(220,38,38,0.1) 0%, rgba(0,0,0,0.3) 50%, rgba(220,38,38,0.05) 100%);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(220,38,38,0.3);
+        box-shadow: 0 8px 32px rgba(220,38,38,0.2), 0 0 0 1px rgba(255,255,255,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        transition: left 0.5s;
+    }
+    
+    .card-premium:hover::before {
+        left: 100%;
     }
     
     .card-hover {
@@ -135,8 +168,38 @@ try {
     }
     
     .card-hover:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(220, 38, 38, 0.3);
+        transform: translateY(-12px) scale(1.05);
+        box-shadow: 0 25px 50px rgba(220, 38, 38, 0.4), 0 0 30px rgba(220, 38, 38, 0.3);
+        border-color: rgba(220, 38, 38, 0.6);
+    }
+    
+    .dopamine-glow {
+        animation: dopamineGlow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes dopamineGlow {
+        0% { 
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3), 0 0 40px rgba(220, 38, 38, 0.1);
+        }
+        100% { 
+            box-shadow: 0 0 40px rgba(220, 38, 38, 0.6), 0 0 80px rgba(220, 38, 38, 0.3);
+        }
+    }
+    
+    .neon-border {
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #000, #000) padding-box,
+                    linear-gradient(45deg, #dc2626, #ef4444, #dc2626) border-box;
+        animation: neonPulse 3s ease-in-out infinite;
+    }
+    
+    @keyframes neonPulse {
+        0%, 100% { 
+            border-image: linear-gradient(45deg, #dc2626, #ef4444, #dc2626) 1;
+        }
+        50% { 
+            border-image: linear-gradient(45deg, #ef4444, #dc2626, #ef4444) 1;
+        }
     }
     
     .fade-in {
@@ -223,14 +286,51 @@ try {
     }
     
     .btn-premium {
-        background: linear-gradient(135deg, #dc2626, #ef4444);
+        background: linear-gradient(135deg, #dc2626, #ef4444, #f97316);
+        background-size: 200% 200%;
         box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
         transition: all 0.3s ease;
+        animation: buttonPulse 2s ease-in-out infinite;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+    }
+    
+    .btn-premium:hover::before {
+        left: 100%;
     }
     
     .btn-premium:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.6);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 30px rgba(220, 38, 38, 0.8);
+        animation: buttonGlow 0.5s ease-in-out;
+    }
+    
+    @keyframes buttonPulse {
+        0%, 100% { 
+            background-position: 0% 50%;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+        50% { 
+            background-position: 100% 50%;
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
+        }
+    }
+    
+    @keyframes buttonGlow {
+        0% { box-shadow: 0 12px 30px rgba(220, 38, 38, 0.8); }
+        50% { box-shadow: 0 15px 40px rgba(220, 38, 38, 1); }
+        100% { box-shadow: 0 12px 30px rgba(220, 38, 38, 0.8); }
     }
     
     .mobile-optimized {
@@ -248,11 +348,64 @@ try {
         0% { background-position: 200% 0; }
         100% { background-position: -200% 0; }
     }
+    
+    .particle {
+        position: absolute;
+        background: radial-gradient(circle, rgba(220,38,38,0.8) 0%, rgba(220,38,38,0.2) 50%, transparent 100%);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: particleFloat 6s ease-in-out infinite;
+    }
+    
+    @keyframes particleFloat {
+        0%, 100% { 
+            transform: translateY(0px) scale(1);
+            opacity: 0.7;
+        }
+        50% { 
+            transform: translateY(-20px) scale(1.2);
+            opacity: 1;
+        }
+    }
+    
+    .dopamine-text {
+        background: linear-gradient(45deg, #dc2626, #ef4444, #f97316, #dc2626);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: textShimmer 3s ease-in-out infinite;
+    }
+    
+    @keyframes textShimmer {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+    
+    .glow-effect {
+        filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5));
+        animation: glowPulse 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glowPulse {
+        0% { filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5)); }
+        100% { filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8)); }
+    }
 </style>
 </head>
-<body class="gradient-bg text-white min-h-screen">
+<body class="gradient-bg text-white min-h-screen relative overflow-hidden">
 
-<div class="flex flex-col lg:flex-row min-h-screen">
+<!-- Partículas de fundo -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="particle w-3 h-3 top-1/4 left-1/4" style="animation-delay: 0s;"></div>
+    <div class="particle w-4 h-4 top-1/3 right-1/4" style="animation-delay: 1s;"></div>
+    <div class="particle w-2 h-2 bottom-1/4 left-1/3" style="animation-delay: 2s;"></div>
+    <div class="particle w-3 h-3 bottom-1/3 right-1/3" style="animation-delay: 3s;"></div>
+    <div class="particle w-2 h-2 top-1/2 left-1/2" style="animation-delay: 4s;"></div>
+    <div class="particle w-4 h-4 top-3/4 right-1/3" style="animation-delay: 5s;"></div>
+</div>
+
+<div class="flex flex-col lg:flex-row min-h-screen relative z-10">
 
     <!-- Sidebar Moderna -->
     <aside id="menu" x-data="{ openCategories: false }" class="fixed top-0 left-0 z-50 gradient-bg backdrop-blur-xl border-r border-white/10 text-white w-full max-w-xs h-full p-6 space-y-6 transform -translate-x-full lg:translate-x-0 lg:relative lg:block lg:w-80 flex-shrink-0">
@@ -356,7 +509,7 @@ try {
                 <div class="text-center mb-12">
                     <h1 class="text-4xl lg:text-6xl font-bold text-white mb-6">
                         Transforme sua 
-                        <span class="text-gradient">Carreira</span>
+                        <span class="dopamine-text glow-effect">Carreira</span>
                     </h1>
                     <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
                         Acesse cursos premium de alta qualidade e acelere seu desenvolvimento profissional com nossa plataforma exclusiva.
@@ -387,23 +540,27 @@ try {
             <!-- Banners Carousel -->
             <section class="fade-in">
                 <?php if (!empty($banners)): ?>
-                <div class="swiper banner-swiper relative w-full max-w-4xl mx-auto rounded-3xl shadow-2xl overflow-hidden">
+                <div class="swiper banner-swiper relative w-full max-w-5xl mx-auto rounded-3xl shadow-2xl overflow-hidden neon-border">
                     <div class="swiper-wrapper">
                         <?php foreach($banners as $banner): ?>
                         <div class="swiper-slide">
                             <a href="<?php echo htmlspecialchars($banner['link_destino']); ?>" aria-label="Saiba mais" class="block w-full aspect-[16/9] bg-cover bg-center bg-no-repeat relative group" style="background-image: url('/<?php echo htmlspecialchars($banner['imagem_url']); ?>');">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                <div class="absolute bottom-6 left-6 right-6">
-                                    <h3 class="text-2xl font-bold text-white mb-2">Oferta Especial</h3>
-                                    <p class="text-gray-200">Aproveite nossa promoção exclusiva!</p>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                                <div class="absolute bottom-8 left-8 right-8">
+                                    <h3 class="text-3xl font-bold text-white mb-3 text-gradient">Oferta Especial</h3>
+                                    <p class="text-gray-200 text-lg">Aproveite nossa promoção exclusiva!</p>
+                                    <div class="mt-4 inline-flex items-center bg-red-600/20 backdrop-blur-sm px-4 py-2 rounded-full border border-red-500/30">
+                                        <i class="fas fa-fire text-red-400 mr-2"></i>
+                                        <span class="text-red-300 font-semibold">Oferta Limitada</span>
+                                    </div>
                                 </div>
                             </a>
                         </div>
                         <?php endforeach; ?>
                     </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next banner-next"></div>
+                    <div class="swiper-button-prev banner-prev"></div>
+                    <div class="swiper-pagination banner-pagination"></div>
                 </div>
                 <?php endif; ?>
             </section>
@@ -486,8 +643,8 @@ try {
                                                 <span class="text-sm font-semibold ml-1">4.9</span>
                                                 <span class="text-xs text-gray-400 ml-1">(127)</span>
                                             </div>
-                                            <div class="text-sm text-gray-400">
-                                                <i class="fas fa-clock mr-1"></i>2h 30min
+                                            <div class="text-sm text-green-400 font-semibold">
+                                                <i class="fas fa-check-circle mr-1"></i>Disponível
                                             </div>
                                         </div>
                                         <a href="curso_pagina.php?id=<?php echo $curso['id']; ?>" class="block w-full mt-auto text-center btn-premium text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105">Acessar Curso</a>
@@ -725,12 +882,17 @@ try {
                 disableOnInteraction: false 
             },
             navigation: { 
-                nextEl: '.banner-swiper .swiper-button-next', 
-                prevEl: '.banner-swiper .swiper-button-prev' 
+                nextEl: '.banner-next', 
+                prevEl: '.banner-prev' 
             },
             pagination: {
-                el: '.banner-swiper .swiper-pagination',
-                clickable: true
+                el: '.banner-pagination',
+                clickable: true,
+                dynamicBullets: true
+            },
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
             }
         });
 
