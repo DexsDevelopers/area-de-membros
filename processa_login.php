@@ -12,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+// Log de tempo para debug
+$startTime = microtime(true);
+error_log("Login iniciado em: " . date('Y-m-d H:i:s'));
+
 // 1. RECEBE E VALIDA OS DADOS DO FORMULÁRIO
 // ----------------------------------------------------
 $username = trim($_POST['username'] ?? '');
@@ -26,6 +30,7 @@ if (empty($username) || empty($password)) {
 
 // 2. BUSCA O USUÁRIO NO BANCO DE DADOS
 // ----------------------------------------------------
+$queryStart = microtime(true);
 try {
     // Prepara a query para buscar o usuário pelo 'username'.
     // É importante selecionar também a senha_hash e a role.
@@ -34,6 +39,9 @@ try {
     
     // Pega o resultado da busca.
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    $queryTime = microtime(true) - $queryStart;
+    error_log("Query executada em: " . round($queryTime * 1000, 2) . "ms");
 
 } catch (PDOException $e) {
     // Em caso de erro no banco, redireciona com um erro genérico.
@@ -48,7 +56,11 @@ try {
 // ----------------------------------------------------
 
 // Verifica se o usuário foi encontrado E se a senha digitada corresponde à senha hash no banco.
+$passwordStart = microtime(true);
 if ($user && password_verify($password, $user['password'])) {
+    
+    $passwordTime = microtime(true) - $passwordStart;
+    error_log("Verificação de senha em: " . round($passwordTime * 1000, 2) . "ms");
     
     // Se tudo estiver correto, o login é um sucesso!
     
@@ -60,6 +72,9 @@ if ($user && password_verify($password, $user['password'])) {
     $_SESSION['user'] = $user['username']; // O nome de usuário para saudação.
     $_SESSION['role'] = $user['role'];       // A 'role' para controle de acesso ('admin' ou 'user').
     
+    $totalTime = microtime(true) - $startTime;
+    error_log("Login bem-sucedido em: " . round($totalTime * 1000, 2) . "ms");
+    
     // Redireciona o usuário com base na sua 'role'.
     if ($user['role'] === 'admin') {
         header('Location: admin_painel.php');
@@ -69,6 +84,10 @@ if ($user && password_verify($password, $user['password'])) {
     exit();
 
 } else {
+    $passwordTime = microtime(true) - $passwordStart;
+    $totalTime = microtime(true) - $startTime;
+    error_log("Login falhou em: " . round($totalTime * 1000, 2) . "ms (senha: " . round($passwordTime * 1000, 2) . "ms)");
+    
     // Se o usuário não foi encontrado OU a senha está incorreta, o login falha.
     // Redireciona de volta para a página de login com um erro genérico para não dar pistas a invasores.
     header('Location: login.php?error=invalid');
