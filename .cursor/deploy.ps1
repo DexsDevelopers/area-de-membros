@@ -19,6 +19,7 @@ $Red = "Red"
 $Green = "Green"
 $Yellow = "Yellow"
 $Blue = "Blue"
+$White = "White"
 
 Write-Host "===================================================" -ForegroundColor $Blue
 Write-Host "🚀 DEPLOY AUTOMÁTICO - HELMER ACADEMY" -ForegroundColor $Blue
