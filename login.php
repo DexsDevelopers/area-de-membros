@@ -25,80 +25,36 @@ if (isset($_GET['error'])) {
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px) scale(0.95); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0) scale(1); 
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); }
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        
-        .animate-fadeInUp { 
-            animation: fadeInUp 1s ease-out; 
-        }
-        
-        .animate-float { 
-            animation: float 3s ease-in-out infinite; 
-        }
-        
-        .animate-glow { 
-            animation: glow 2s ease-in-out infinite; 
-        }
-        
-        .shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
+        .animate-fadeIn { 
+            animation: fadeIn 0.6s ease-out; 
         }
         
         .glass-effect {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .gradient-text {
-            background: linear-gradient(135deg, #ef4444, #f97316, #eab308);
+            background: linear-gradient(135deg, #ef4444, #f97316);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
         .input-focus:focus {
-            transform: scale(1.02);
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+            transform: scale(1.01);
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
         }
         
         .btn-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(239, 68, 68, 0.6);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: float 4s ease-in-out infinite;
-            z-index: 1;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
         }
         
         /* Garantir que elementos interativos funcionem */
@@ -108,48 +64,40 @@ if (isset($_GET['error'])) {
             user-select: auto !important;
         }
         
-        /* Remover qualquer bloqueio de interação */
-        * {
-            -webkit-user-select: auto;
-            -moz-user-select: auto;
-            -ms-user-select: auto;
-            user-select: auto;
-        }
-        
         /* Garantir que o formulário seja clicável */
         form {
             pointer-events: auto !important;
             position: relative;
             z-index: 10;
         }
+        
+        /* Responsividade melhorada */
+        @media (max-width: 640px) {
+            .login-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-black to-red-900 text-white font-sans flex items-center justify-center min-h-screen p-4 relative overflow-hidden">
+<body class="bg-gradient-to-br from-gray-900 via-black to-red-900 text-white font-sans flex items-center justify-center min-h-screen p-4">
     
-    <!-- Partículas de fundo -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="particle w-2 h-2 top-1/4 left-1/4" style="animation-delay: 0s;"></div>
-        <div class="particle w-3 h-3 top-1/3 right-1/4" style="animation-delay: 1s;"></div>
-        <div class="particle w-1 h-1 bottom-1/4 left-1/3" style="animation-delay: 2s;"></div>
-        <div class="particle w-2 h-2 bottom-1/3 right-1/3" style="animation-delay: 3s;"></div>
-    </div>
-
     <!-- Container principal -->
     <div x-data="{ 
         loading: false, 
         showPassword: false,
         rememberMe: false 
-    }" class="relative z-10 w-full max-w-md">
+    }" class="w-full max-w-md">
         
-        <!-- Card de login com efeito glass -->
-        <div class="glass-effect rounded-3xl shadow-2xl p-8 animate-fadeInUp">
+        <!-- Card de login -->
+        <div class="glass-effect rounded-2xl shadow-2xl p-6 sm:p-8 animate-fadeIn login-container">
             
             <!-- Logo e título -->
             <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-4 animate-glow">
-                    <i class="fas fa-graduation-cap text-3xl text-white"></i>
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-full mb-4">
+                    <i class="fas fa-graduation-cap text-2xl text-white"></i>
                 </div>
-                <h1 class="text-3xl font-bold gradient-text mb-2">HELMER ACADEMY</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold gradient-text mb-2">HELMER ACADEMY</h1>
                 <p class="text-gray-400 text-sm">Entre na sua conta para continuar</p>
             </div>
             
@@ -222,28 +170,6 @@ if (isset($_GET['error'])) {
                 </button>
             </form>
             
-            <!-- Links adicionais -->
-            <div class="mt-8 text-center space-y-4">
-                <div class="relative">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-600"></div>
-                    </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-transparent text-gray-400">Ou</span>
-                    </div>
-                </div>
-                
-                <div class="flex space-x-4">
-                    <button class="flex-1 bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group">
-                        <i class="fab fa-google mr-2 group-hover:scale-110 transition-transform"></i>
-                        Google
-                    </button>
-                    <button class="flex-1 bg-gray-800 hover:bg-gray-700 text-white py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center group">
-                        <i class="fab fa-microsoft mr-2 group-hover:scale-110 transition-transform"></i>
-                        Microsoft
-                    </button>
-                </div>
-            </div>
             
             <!-- Footer -->
             <div class="mt-8 text-center">
@@ -255,37 +181,12 @@ if (isset($_GET['error'])) {
                 </p>
             </div>
         </div>
-        
-        <!-- Efeito de brilho no fundo -->
-        <div class="absolute -inset-1 bg-gradient-to-r from-red-600 via-red-500 to-red-600 rounded-3xl blur opacity-20 animate-glow"></div>
     </div>
 
-    <!-- Script para efeitos visuais -->
+    <!-- Script simplificado -->
     <script>
-        // Aguardar carregamento completo
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Login page loaded');
-            
-            // Verificar se Alpine.js está carregado
-            if (typeof Alpine === 'undefined') {
-                console.error('Alpine.js não carregado');
-                // Recarregar Alpine.js se necessário
-                const script = document.createElement('script');
-                script.src = 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js';
-                script.defer = true;
-                document.head.appendChild(script);
-            }
-            
-            // Efeito de partículas interativas (opcional)
-            document.addEventListener('mousemove', function(e) {
-                const particles = document.querySelectorAll('.particle');
-                particles.forEach((particle, index) => {
-                    const speed = (index + 1) * 0.3; // Reduzido para melhor performance
-                    const x = e.clientX * speed / 200;
-                    const y = e.clientY * speed / 200;
-                    particle.style.transform = `translate(${x}px, ${y}px)`;
-                });
-            });
             
             // Efeitos nos campos de input
             const usernameInput = document.getElementById('username');
@@ -314,32 +215,7 @@ if (isset($_GET['error'])) {
                     this.style.borderColor = '#4b5563';
                 });
             }
-            
-            // Verificar se os botões estão funcionando
-            const submitButton = document.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.addEventListener('click', function(e) {
-                    console.log('Submit button clicked');
-                });
-            }
-            
-            // Verificar se o formulário está funcionando
-            const form = document.querySelector('form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    console.log('Form submitted');
-                });
-            }
         });
-        
-        // Fallback para garantir que os elementos sejam clicáveis
-        setTimeout(function() {
-            const inputs = document.querySelectorAll('input, button, a');
-            inputs.forEach(function(element) {
-                element.style.pointerEvents = 'auto';
-                element.style.cursor = 'pointer';
-            });
-        }, 1000);
     </script>
 </body>
 </html>
