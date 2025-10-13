@@ -1,0 +1,112 @@
+{
+    "version": "1.0.0",
+    "automations": [
+      {
+        "id": "auto-commit-changes",
+        "name": "Commit Automático de Mudanças",
+        "description": "Faz commit automático de mudanças não commitadas ao salvar arquivos",
+        "trigger": {
+          "type": "file-change",
+          "patterns": ["**/*.php", "**/*.js", "**/*.css", "**/*.html", "**/*.json"]
+        },
+        "command": {
+          "type": "shell",
+          "command": "git add .; git commit -m \"Atualização automática - $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')\"",
+          "workingDirectory": "${workspaceFolder}",
+          "shell": {
+            "executable": "powershell.exe"
+          }
+        },
+        "enabled": true,
+        "delay": 4000
+      },
+      {
+        "id": "auto-deploy-on-commit",
+        "name": "Deploy Automático no Commit",
+        "description": "Executa o deploy automaticamente quando há novos commits no repositório",
+        "trigger": {
+          "type": "git-commit",
+          "branch": "main"
+        },
+        "command": {
+          "type": "shell",
+          "command": "powershell -ExecutionPolicy Bypass -File .\\.cursor\\deploy.ps1",
+          "workingDirectory": "${workspaceFolder}",
+          "shell": {
+            "executable": "powershell.exe",
+            "args": ["-ExecutionPolicy", "Bypass"]
+          }
+        },
+        "enabled": true,
+        "notifications": {
+          "onStart": "🚀 Iniciando deploy automático...",
+          "onSuccess": "✅ Deploy concluído com sucesso!",
+          "onError": "❌ Erro no deploy automático"
+        }
+      },
+      {
+        "id": "auto-optimize-images",
+        "name": "Otimização Automática de Imagens",
+        "description": "Otimiza imagens automaticamente quando são adicionadas à pasta uploads",
+        "trigger": {
+          "type": "file-change",
+          "patterns": ["uploads/**/*.png", "uploads/**/*.jpg", "uploads/**/*.jpeg"]
+        },
+        "command": {
+          "type": "shell",
+          "command": "powershell -ExecutionPolicy Bypass -File .\\.cursor\\optimize-images.ps1",
+          "workingDirectory": "${workspaceFolder}",
+          "shell": {
+            "executable": "powershell.exe",
+            "args": ["-ExecutionPolicy", "Bypass"]
+          }
+        },
+        "enabled": false,
+        "delay": 2000
+      },
+      {
+        "id": "auto-clear-cache",
+        "name": "Limpeza Automática de Cache",
+        "description": "Limpa o cache automaticamente quando arquivos de configuração são alterados",
+        "trigger": {
+          "type": "file-change",
+          "patterns": ["config.php", "cache.php", "*.env"]
+        },
+        "command": {
+          "type": "shell",
+          "command": "Remove-Item cache\\* -Force -ErrorAction SilentlyContinue; Write-Host 'Cache limpo automaticamente'",
+          "workingDirectory": "${workspaceFolder}",
+          "shell": {
+            "executable": "powershell.exe"
+          }
+        },
+        "enabled": true,
+        "delay": 1000
+      },
+      {
+        "id": "auto-backup-before-deploy",
+        "name": "Backup Automático Antes do Deploy",
+        "description": "Cria backup automático antes de executar deploy",
+        "trigger": {
+          "type": "manual",
+          "command": "deploy"
+        },
+        "command": {
+          "type": "shell",
+          "command": "powershell -ExecutionPolicy Bypass -File .\\.cursor\\backup.ps1",
+          "workingDirectory": "${workspaceFolder}",
+          "shell": {
+            "executable": "powershell.exe",
+            "args": ["-ExecutionPolicy", "Bypass"]
+          }
+        },
+        "enabled": true,
+        "notifications": {
+          "onStart": "📦 Criando backup automático...",
+          "onSuccess": "✅ Backup criado com sucesso!",
+          "onError": "❌ Erro ao criar backup"
+        }
+      }
+    ]
+  }
+  

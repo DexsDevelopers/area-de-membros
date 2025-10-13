@@ -1,0 +1,909 @@
+/**
+ * Estilos Responsivos para Helmer Academy
+ * Melhorias de UX em diferentes dispositivos
+ * Versão 2.0 - Com Loading States, Notificações Push e Mobile First
+ */
+
+/* ===== LOADING STATES ===== */
+
+/* Skeleton Loading */
+.skeleton {
+    background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 0.5rem;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.skeleton-text:last-child {
+    width: 60%;
+}
+
+.skeleton-image {
+    height: 200px;
+    border-radius: 0.5rem;
+}
+
+.skeleton-card {
+    padding: 1rem;
+    background: #1f2937;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #374151;
+    border-radius: 50%;
+    border-top-color: #e11d48;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+.loading-content {
+    background: #1f2937;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    color: white;
+}
+
+/* Button Loading States */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* ===== NOTIFICAÇÕES PUSH ===== */
+
+.notification-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10000;
+    max-width: 400px;
+    width: 100%;
+}
+
+.notification {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left: 4px solid #10b981;
+    background: linear-gradient(135deg, #1f2937 0%, #064e3b 100%);
+}
+
+.notification.error {
+    border-left: 4px solid #ef4444;
+    background: linear-gradient(135deg, #1f2937 0%, #7f1d1d 100%);
+}
+
+.notification.info {
+    border-left: 4px solid #3b82f6;
+    background: linear-gradient(135deg, #1f2937 0%, #1e3a8a 100%);
+}
+
+.notification.warning {
+    border-left: 4px solid #f59e0b;
+    background: linear-gradient(135deg, #1f2937 0%, #78350f 100%);
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: white;
+    font-size: 0.875rem;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.notification-close:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.notification-message {
+    color: #d1d5db;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: #e11d48;
+    border-radius: 0 0 0.75rem 0.75rem;
+    animation: notification-progress 5s linear forwards;
+}
+
+@keyframes notification-progress {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+/* ===== RESPONSIVIDADE GERAL ===== */
+
+/* Mobile First - Base styles */
+.container {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Breakpoints personalizados */
+@media (min-width: 640px) {
+    .container { max-width: 640px; }
+}
+
+@media (min-width: 768px) {
+    .container { max-width: 768px; }
+}
+
+@media (min-width: 1024px) {
+    .container { max-width: 1024px; }
+}
+
+@media (min-width: 1280px) {
+    .container { max-width: 1280px; }
+}
+
+/* ===== NAVEGAÇÃO RESPONSIVA ===== */
+
+/* Menu mobile melhorado */
+.mobile-menu {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.mobile-menu.open {
+    transform: translateX(0);
+}
+
+/* Overlay para menu mobile */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ===== CARDS RESPONSIVOS ===== */
+
+/* Grid responsivo para cards */
+.responsive-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+    .responsive-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .responsive-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1280px) {
+    .responsive-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Cards com hover melhorado */
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== TIPOGRAFIA RESPONSIVA ===== */
+
+/* Títulos responsivos */
+.responsive-title {
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+    .responsive-title {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .responsive-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* Texto responsivo */
+.responsive-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+    .responsive-text {
+        font-size: 1rem;
+    }
+}
+
+/* ===== FORMULÁRIOS RESPONSIVOS ===== */
+
+/* Inputs responsivos */
+.responsive-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #374151;
+    background-color: #1f2937;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.responsive-input:focus {
+    outline: none;
+    border-color: #e11d48;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+@media (min-width: 640px) {
+    .responsive-input {
+        padding: 1rem 1.25rem;
+        font-size: 1.125rem;
+    }
+}
+
+/* Botões responsivos */
+.responsive-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+    .responsive-button {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+/* ===== SWIPER RESPONSIVO ===== */
+
+/* Configurações responsivas do Swiper */
+.swiper-responsive {
+    --swiper-navigation-size: 32px;
+}
+
+@media (min-width: 640px) {
+    .swiper-responsive {
+        --swiper-navigation-size: 40px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .swiper-responsive {
+        --swiper-navigation-size: 44px;
+    }
+}
+
+/* Botões de navegação responsivos */
+.swiper-button-next,
+.swiper-button-prev {
+    width: var(--swiper-navigation-size);
+    height: var(--swiper-navigation-size);
+    margin-top: calc(-1 * var(--swiper-navigation-size) / 2);
+}
+
+/* ===== IMAGENS RESPONSIVAS ===== */
+
+/* Imagens que se adaptam ao container */
+.responsive-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+/* Aspect ratio responsivo */
+.aspect-responsive {
+    aspect-ratio: 16/9;
+}
+
+@media (min-width: 640px) {
+    .aspect-responsive {
+        aspect-ratio: 4/3;
+    }
+}
+
+@media (min-width: 1024px) {
+    .aspect-responsive {
+        aspect-ratio: 16/9;
+    }
+}
+
+/* ===== LAYOUT RESPONSIVO ===== */
+
+/* Sidebar responsiva */
+.sidebar-responsive {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 16rem;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 50;
+}
+
+@media (min-width: 768px) {
+    .sidebar-responsive {
+        position: relative;
+        transform: translateX(0);
+        width: 20rem;
+    }
+}
+
+/* Main content responsivo */
+.main-responsive {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+@media (min-width: 768px) {
+    .main-responsive {
+        margin-left: 20rem;
+    }
+}
+
+/* ===== UTILITÁRIOS RESPONSIVOS ===== */
+
+/* Espaçamento responsivo */
+.space-responsive > * + * {
+    margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+    .space-responsive > * + * {
+        margin-top: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .space-responsive > * + * {
+        margin-top: 2rem;
+    }
+}
+
+/* Padding responsivo */
+.p-responsive {
+    padding: 1rem;
+}
+
+@media (min-width: 640px) {
+    .p-responsive {
+        padding: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .p-responsive {
+        padding: 2rem;
+    }
+}
+
+/* ===== ANIMAÇÕES RESPONSIVAS ===== */
+
+/* Fade in responsivo */
+.fade-in-responsive {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+}
+
+.fade-in-responsive.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Delay escalonado para animações */
+.fade-in-responsive:nth-child(1) { transition-delay: 0.1s; }
+.fade-in-responsive:nth-child(2) { transition-delay: 0.2s; }
+.fade-in-responsive:nth-child(3) { transition-delay: 0.3s; }
+.fade-in-responsive:nth-child(4) { transition-delay: 0.4s; }
+
+/* ===== DARK MODE RESPONSIVO ===== */
+
+@media (prefers-color-scheme: dark) {
+    .auto-dark {
+        background-color: #000000;
+        color: #ffffff;
+    }
+}
+
+/* ===== TOUCH RESPONSIVO ===== */
+
+/* Melhorar experiência touch */
+.touch-friendly {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .hover-only {
+        display: none;
+    }
+    
+    .touch-only {
+        display: block;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .hover-only {
+        display: block;
+    }
+    
+    .touch-only {
+        display: none;
+    }
+}
+
+/* ===== MOBILE OPTIMIZATIONS ===== */
+
+/* Safe Area para dispositivos com notch */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+    padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+    padding-right: env(safe-area-inset-right);
+}
+
+/* Melhorar scroll em mobile */
+.mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Touch targets maiores em mobile */
+@media (max-width: 768px) {
+    .mobile-touch-target {
+        min-height: 48px;
+        min-width: 48px;
+        padding: 12px;
+    }
+}
+
+/* Swipe gestures */
+.swipe-container {
+    touch-action: pan-y;
+    overflow-x: hidden;
+}
+
+/* Pull to refresh */
+.pull-to-refresh {
+    position: relative;
+    overflow: hidden;
+}
+
+.pull-indicator {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: top 0.3s ease;
+    color: #e11d48;
+    font-size: 1.5rem;
+}
+
+.pull-indicator.active {
+    top: 20px;
+}
+
+/* ===== MOBILE NAVIGATION ===== */
+
+.mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid #374151;
+    padding: 0.5rem 0;
+    z-index: 50;
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    color: #9ca3af;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+    margin: 0 0.25rem;
+}
+
+.mobile-nav-item.active {
+    color: #e11d48;
+    background: rgba(225, 29, 72, 0.1);
+}
+
+.mobile-nav-item i {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.mobile-nav-item span {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* ===== MOBILE FORMS ===== */
+
+.mobile-input {
+    font-size: 16px; /* Previne zoom no iOS */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background: #1f2937;
+    border: 1px solid #374151;
+    color: white;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.mobile-input:focus {
+    outline: none;
+    border-color: #e11d48;
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+.mobile-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* ===== MOBILE CARDS ===== */
+
+.mobile-card {
+    background: #1f2937;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #374151;
+    transition: all 0.2s ease;
+}
+
+.mobile-card:active {
+    transform: scale(0.98);
+    background: #374151;
+}
+
+.mobile-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.mobile-card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.mobile-card-subtitle {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin: 0.25rem 0 0 0;
+}
+
+/* ===== MOBILE MODALS ===== */
+
+.mobile-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+}
+
+.mobile-modal-content {
+    background: #1f2937;
+    border-radius: 1rem 1rem 0 0;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-modal.show .mobile-modal-content {
+    transform: translateY(0);
+}
+
+.mobile-modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid #374151;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mobile-modal-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.mobile-modal-close {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.mobile-modal-close:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-modal-body {
+    padding: 1rem;
+}
+
+/* ===== MOBILE LOADING STATES ===== */
+
+.mobile-skeleton {
+    background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.mobile-skeleton-card {
+    padding: 1rem;
+    background: #1f2937;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+}
+
+.mobile-skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.mobile-skeleton-text:last-child {
+    width: 60%;
+}
+
+.mobile-skeleton-image {
+    height: 200px;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* ===== MOBILE PERFORMANCE ===== */
+
+/* Otimizações de scroll */
+.smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevenir zoom em inputs */
+@media screen and (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="url"],
+    textarea,
+    select {
+        font-size: 16px;
+    }
+}
+
+/* Melhorar performance de animações */
+.will-change-transform {
+    will-change: transform;
+}
+
+.will-change-opacity {
+    will-change: opacity;
+}
+
+/* ===== MOBILE ACCESSIBILITY ===== */
+
+/* Focus visível melhorado para mobile */
+.mobile-focus:focus {
+    outline: 2px solid #e11d48;
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+}
+
+/* Reduzir animações se preferido */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-animation {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Alto contraste para mobile */
+@media (prefers-contrast: high) {
+    .mobile-high-contrast {
+        border: 2px solid white;
+        background: black;
+        color: white;
+    }
+}
+
+/* ===== PERFORMANCE RESPONSIVA ===== */
+
+/* Lazy loading melhorado */
+.lazy-load {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lazy-load.loaded {
+    opacity: 1;
+}
+
+/* ===== ACESSIBILIDADE RESPONSIVA ===== */
+
+/* Focus visível em todos os dispositivos */
+.focus-visible:focus {
+    outline: 2px solid #e11d48;
+    outline-offset: 2px;
+}
+
+/* Reduzir animações se preferido */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===== PRINT RESPONSIVO ===== */
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .print-friendly {
+        color: #000000 !important;
+        background-color: #ffffff !important;
+    }
+}

@@ -1,0 +1,51 @@
+/* Neon effect */
+.neon-box {
+    box-shadow: 0 0 10px #e11d48, 0 0 20px #e11d48;
+  }
+  .neon-box:hover {
+    box-shadow: 0 0 20px #e11d48, 0 0 40px #e11d48;
+  }
+  
+  /* Título com animação de neon pulse */
+  @keyframes neonPulse {
+    0%, 100% { text-shadow: 0 0 10px #e11d48; }
+    50% { text-shadow: 0 0 20px #e11d48; }
+  }
+  .titulo-section {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #e11d48;
+    animation: neonPulse 2s infinite;
+  }
+  
+  /* Fade-slide animation */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .fade-slide { animation: fadeSlideIn 0.8s ease forwards; }
+  
+  /* Scroll reveal */
+  .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+  .scroll-reveal.show { opacity: 1; transform: translateY(0); }
+  
+  /* Carrossel */
+  .carousel {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  .carousel-item {
+    scroll-snap-align: start;
+    flex: 0 0 100%;
+  }
+  @media (min-width: 768px) {
+    .carousel-item { flex: 0 0 700px; }
+  }
+  
+  /* Esconde scrollbar do carrossel */
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+  
