@@ -13,6 +13,7 @@ $ProjectName = "helmer-academy"
 $DeployDir = "deploy"
 $BackupDir = "backups"
 $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$StartTime = Get-Date
 
 # Cores para output
 $Red = "Red"
@@ -20,37 +21,72 @@ $Green = "Green"
 $Yellow = "Yellow"
 $Blue = "Blue"
 $White = "White"
+$Cyan = "Cyan"
+
+# Log de deploy
+$LogFile = "deploy-log-$Timestamp.txt"
+$LogContent = @()
+
+function Write-Log {
+    param([string]$Message, [string]$Level = "INFO")
+    $LogEntry = "[$(Get-Date -Format 'HH:mm:ss')] [$Level] $Message"
+    $LogContent += $LogEntry
+    Write-Host $LogEntry -ForegroundColor $(if($Level -eq "ERROR") { $Red } elseif($Level -eq "SUCCESS") { $Green } elseif($Level -eq "WARNING") { $Yellow } else { $White })
+}
+
+function Save-Log {
+    $LogContent | Out-File -FilePath $LogFile -Encoding UTF8
+    Write-Log "Log salvo em: $LogFile" "INFO"
+}
 
 Write-Host "===================================================" -ForegroundColor $Blue
 Write-Host "🚀 DEPLOY AUTOMÁTICO - HELMER ACADEMY" -ForegroundColor $Blue
 Write-Host "===================================================" -ForegroundColor $Blue
-Write-Host "Ambiente: $Environment" -ForegroundColor $Yellow
-Write-Host "Target: $Target" -ForegroundColor $Yellow
-Write-Host "Timestamp: $Timestamp" -ForegroundColor $Yellow
+Write-Log "Iniciando deploy automático" "INFO"
+Write-Log "Ambiente: $Environment" "INFO"
+Write-Log "Target: $Target" "INFO"
+Write-Log "Timestamp: $Timestamp" "INFO"
+Write-Log "Hora de início: $($StartTime.ToString('dd/MM/yyyy HH:mm:ss'))" "INFO"
 
 try {
     # 1. Verificar se estamos no diretório correto
+    Write-Log "Verificando diretório do projeto" "INFO"
     if (-not (Test-Path "index.php")) {
+        Write-Log "ERRO: Execute este script no diretório raiz do projeto" "ERROR"
         throw "Execute este script no diretório raiz do projeto"
     }
+    Write-Log "Diretório do projeto verificado com sucesso" "SUCCESS"
 
     # 2. Criar backup
-    Write-Host "📦 Criando backup..." -ForegroundColor $Green
+    $BackupStartTime = Get-Date
+    Write-Log "Iniciando processo de backup" "INFO"
     if (Test-Path $BackupDir) {
         Remove-Item $BackupDir -Recurse -Force
+        Write-Log "Diretório de backup anterior removido" "INFO"
     }
     New-Item -ItemType Directory -Path $BackupDir -Force | Out-Null
+    Write-Log "Diretório de backup criado" "SUCCESS"
     
     # Backup de arquivos importantes
+    $BackupFiles = 0
     if (Test-Path "uploads") {
         Copy-Item "uploads" "$BackupDir\uploads" -Recurse -Force
+        $BackupFiles++
+        Write-Log "Pasta uploads copiada para backup" "SUCCESS"
     }
     if (Test-Path "cache") {
         Copy-Item "cache" "$BackupDir\cache" -Recurse -Force
+        $BackupFiles++
+        Write-Log "Pasta cache copiada para backup" "SUCCESS"
     }
     if (Test-Path "config.php") {
         Copy-Item "config.php" "$BackupDir\config.php" -Force
+        $BackupFiles++
+        Write-Log "Arquivo config.php copiado para backup" "SUCCESS"
     }
+    
+    $BackupTime = (Get-Date) - $BackupStartTime
+    Write-Log "Backup concluído em $($BackupTime.TotalSeconds.ToString('F2')) segundos - $BackupFiles arquivos" "SUCCESS"
 
     # 3. Preparar diretório de deploy
     Write-Host "🔧 Preparando deploy..." -ForegroundColor $Green
@@ -228,16 +264,36 @@ echo json_encode($health, JSON_PRETTY_PRINT);
     Compress-Archive -Path "$DeployDir\*" -DestinationPath $ZipPath -Force
 
     # 14. Estatísticas finais
+    $EndTime = Get-Date
+    $TotalTime = $EndTime - $StartTime
     $FileCount = (Get-ChildItem $DeployDir -Recurse -File).Count
     $ZipSize = [math]::Round((Get-Item $ZipPath).Length / 1MB, 2)
 
     Write-Host "===================================================" -ForegroundColor $Blue
-    Write-Host "✅ DEPLOY AUTOMÁTICO CONCLUÍDO!" -ForegroundColor $Green
+    Write-Host "✅ DEPLOY AUTOMÁTICO CONCLUÍDO COM SUCESSO!" -ForegroundColor $Green
     Write-Host "===================================================" -ForegroundColor $Blue
+    
+    # Log de estatísticas
+    Write-Log "DEPLOY FINALIZADO COM SUCESSO" "SUCCESS"
+    Write-Log "Tempo total de execução: $($TotalTime.TotalSeconds.ToString('F2')) segundos" "SUCCESS"
+    Write-Log "Arquivos processados: $FileCount" "SUCCESS"
+    Write-Log "Tamanho do ZIP: $ZipSize MB" "SUCCESS"
+    Write-Log "Timestamp: $Timestamp" "SUCCESS"
+    Write-Log "Target: $Target" "SUCCESS"
+    Write-Log "Ambiente: $Environment" "SUCCESS"
+    Write-Log "Hora de início: $($StartTime.ToString('dd/MM/yyyy HH:mm:ss'))" "SUCCESS"
+    Write-Log "Hora de conclusão: $($EndTime.ToString('dd/MM/yyyy HH:mm:ss'))" "SUCCESS"
+    
+    # Salvar log
+    Save-Log
+    
+    Write-Host "📊 ESTATÍSTICAS DO DEPLOY:" -ForegroundColor $Cyan
+    Write-Host "⏱️  Tempo total: $($TotalTime.TotalSeconds.ToString('F2')) segundos" -ForegroundColor $Yellow
     Write-Host "📁 Arquivos no deploy: $FileCount" -ForegroundColor $Yellow
     Write-Host "📦 Tamanho do ZIP: $ZipSize MB" -ForegroundColor $Yellow
     Write-Host "⏰ Timestamp: $Timestamp" -ForegroundColor $Yellow
     Write-Host "🎯 Target: $Target" -ForegroundColor $Yellow
+    Write-Host "🌍 Ambiente: $Environment" -ForegroundColor $Yellow
     Write-Host ""
     Write-Host "📋 PRÓXIMOS PASSOS:" -ForegroundColor $Blue
     Write-Host "1. Faça upload do arquivo: $ZipPath" -ForegroundColor $White
@@ -245,10 +301,24 @@ echo json_encode($health, JSON_PRETTY_PRINT);
     Write-Host "3. Configure o banco de dados" -ForegroundColor $White
     Write-Host "4. Teste a aplicação" -ForegroundColor $White
     Write-Host ""
+    Write-Host "📄 Log detalhado salvo em: $LogFile" -ForegroundColor $Cyan
     Write-Host "🚀 Deploy automático finalizado com sucesso!" -ForegroundColor $Green
 
 } catch {
+    $EndTime = Get-Date
+    $TotalTime = $EndTime - $StartTime
+    
+    Write-Log "ERRO NO DEPLOY AUTOMÁTICO" "ERROR"
+    Write-Log "Erro: $($_.Exception.Message)" "ERROR"
+    Write-Log "Tempo até o erro: $($TotalTime.TotalSeconds.ToString('F2')) segundos" "ERROR"
+    Write-Log "Hora do erro: $($EndTime.ToString('dd/MM/yyyy HH:mm:ss'))" "ERROR"
+    
+    # Salvar log mesmo com erro
+    Save-Log
+    
     Write-Host "❌ ERRO NO DEPLOY AUTOMÁTICO:" -ForegroundColor $Red
-    Write-Host $_.Exception.Message -ForegroundColor $Red
+    Write-Host "Erro: $($_.Exception.Message)" -ForegroundColor $Red
+    Write-Host "Tempo até o erro: $($TotalTime.TotalSeconds.ToString('F2')) segundos" -ForegroundColor $Red
+    Write-Host "Log de erro salvo em: $LogFile" -ForegroundColor $Red
     exit 1
 }
