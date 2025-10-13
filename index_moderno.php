@@ -391,9 +391,22 @@ try {
         0% { filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5)); }
         100% { filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8)); }
     }
+    
+    /* Garantir que o scroll funcione */
+    html, body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 100%;
+    }
+    
+    .main-content {
+        overflow-y: auto;
+        height: 100vh;
+        -webkit-overflow-scrolling: touch;
+    }
 </style>
 </head>
-<body class="gradient-bg text-white min-h-screen relative overflow-hidden">
+<body class="gradient-bg text-white min-h-screen relative">
 
 <!-- Partículas de fundo -->
 <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -467,7 +480,7 @@ try {
     </aside>
 
     <!-- Conteúdo Principal -->
-    <div class="flex-1 min-h-screen overflow-y-auto">
+    <div class="flex-1 min-h-screen overflow-y-auto relative z-10 main-content">
         
         <!-- Header Premium -->
         <header class="p-6 lg:p-8 flex justify-between items-center sticky top-0 gradient-bg backdrop-blur-xl z-40 border-b border-white/10">
@@ -849,6 +862,19 @@ try {
             .catch(error => console.error('Erro:', error));
         }
     }
+    
+    // Garantir que o scroll funcione
+    document.addEventListener('DOMContentLoaded', function() {
+        // Forçar scroll habilitado
+        document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+        
+        // Remover qualquer bloqueio de scroll
+        document.body.style.height = 'auto';
+        document.documentElement.style.height = 'auto';
+        
+        console.log('Scroll habilitado');
+    });
     
     document.addEventListener('DOMContentLoaded', function () {
         const createSwiper = (selector) => {
