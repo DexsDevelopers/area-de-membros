@@ -553,20 +553,12 @@ try {
             <!-- Banners Carousel -->
             <section class="fade-in">
                 <?php if (!empty($banners)): ?>
-                <div class="swiper banner-swiper relative w-full max-w-5xl mx-auto rounded-3xl shadow-2xl overflow-hidden neon-border">
+                <div class="swiper banner-swiper relative w-full max-w-md mx-auto rounded-2xl shadow-2xl overflow-hidden neon-border">
                     <div class="swiper-wrapper">
                         <?php foreach($banners as $banner): ?>
                         <div class="swiper-slide">
-                            <a href="<?php echo htmlspecialchars($banner['link_destino']); ?>" aria-label="Saiba mais" class="block w-full aspect-[16/9] bg-cover bg-center bg-no-repeat relative group" style="background-image: url('/<?php echo htmlspecialchars($banner['imagem_url']); ?>');">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                                <div class="absolute bottom-8 left-8 right-8">
-                                    <h3 class="text-3xl font-bold text-white mb-3 text-gradient">Oferta Especial</h3>
-                                    <p class="text-gray-200 text-lg">Aproveite nossa promoção exclusiva!</p>
-                                    <div class="mt-4 inline-flex items-center bg-red-600/20 backdrop-blur-sm px-4 py-2 rounded-full border border-red-500/30">
-                                        <i class="fas fa-fire text-red-400 mr-2"></i>
-                                        <span class="text-red-300 font-semibold">Oferta Limitada</span>
-                                    </div>
-                                </div>
+                            <a href="<?php echo htmlspecialchars($banner['link_destino']); ?>" aria-label="Saiba mais" class="block w-full aspect-square bg-cover bg-center bg-no-repeat relative group" style="background-image: url('/<?php echo htmlspecialchars($banner['imagem_url']); ?>');">
+                                <!-- Sem texto sobreposto - apenas a imagem limpa -->
                             </a>
                         </div>
                         <?php endforeach; ?>
