@@ -98,6 +98,29 @@ if (isset($_GET['error'])) {
             border-radius: 50%;
             pointer-events: none;
             animation: float 4s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        /* Garantir que elementos interativos funcionem */
+        input, button, a, select, textarea {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+            user-select: auto !important;
+        }
+        
+        /* Remover qualquer bloqueio de interação */
+        * {
+            -webkit-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
+        }
+        
+        /* Garantir que o formulário seja clicável */
+        form {
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 10;
         }
     </style>
 </head>
@@ -239,36 +262,84 @@ if (isset($_GET['error'])) {
 
     <!-- Script para efeitos visuais -->
     <script>
-        // Efeito de partículas interativas
-        document.addEventListener('mousemove', function(e) {
-            const particles = document.querySelectorAll('.particle');
-            particles.forEach((particle, index) => {
-                const speed = (index + 1) * 0.5;
-                const x = e.clientX * speed / 100;
-                const y = e.clientY * speed / 100;
-                particle.style.transform = `translate(${x}px, ${y}px)`;
+        // Aguardar carregamento completo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Login page loaded');
+            
+            // Verificar se Alpine.js está carregado
+            if (typeof Alpine === 'undefined') {
+                console.error('Alpine.js não carregado');
+                // Recarregar Alpine.js se necessário
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js';
+                script.defer = true;
+                document.head.appendChild(script);
+            }
+            
+            // Efeito de partículas interativas (opcional)
+            document.addEventListener('mousemove', function(e) {
+                const particles = document.querySelectorAll('.particle');
+                particles.forEach((particle, index) => {
+                    const speed = (index + 1) * 0.3; // Reduzido para melhor performance
+                    const x = e.clientX * speed / 200;
+                    const y = e.clientY * speed / 200;
+                    particle.style.transform = `translate(${x}px, ${y}px)`;
+                });
             });
+            
+            // Efeitos nos campos de input
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
+            if (usernameInput) {
+                usernameInput.addEventListener('focus', function() {
+                    this.style.background = 'rgba(239, 68, 68, 0.1)';
+                    this.style.borderColor = '#ef4444';
+                });
+                
+                usernameInput.addEventListener('blur', function() {
+                    this.style.background = 'rgba(31, 41, 55, 0.5)';
+                    this.style.borderColor = '#4b5563';
+                });
+            }
+            
+            if (passwordInput) {
+                passwordInput.addEventListener('focus', function() {
+                    this.style.background = 'rgba(239, 68, 68, 0.1)';
+                    this.style.borderColor = '#ef4444';
+                });
+                
+                passwordInput.addEventListener('blur', function() {
+                    this.style.background = 'rgba(31, 41, 55, 0.5)';
+                    this.style.borderColor = '#4b5563';
+                });
+            }
+            
+            // Verificar se os botões estão funcionando
+            const submitButton = document.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.addEventListener('click', function(e) {
+                    console.log('Submit button clicked');
+                });
+            }
+            
+            // Verificar se o formulário está funcionando
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    console.log('Form submitted');
+                });
+            }
         });
         
-        // Efeito de digitação no placeholder
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        
-        usernameInput.addEventListener('focus', function() {
-            this.style.background = 'rgba(239, 68, 68, 0.1)';
-        });
-        
-        usernameInput.addEventListener('blur', function() {
-            this.style.background = 'rgba(31, 41, 55, 0.5)';
-        });
-        
-        passwordInput.addEventListener('focus', function() {
-            this.style.background = 'rgba(239, 68, 68, 0.1)';
-        });
-        
-        passwordInput.addEventListener('blur', function() {
-            this.style.background = 'rgba(31, 41, 55, 0.5)';
-        });
+        // Fallback para garantir que os elementos sejam clicáveis
+        setTimeout(function() {
+            const inputs = document.querySelectorAll('input, button, a');
+            inputs.forEach(function(element) {
+                element.style.pointerEvents = 'auto';
+                element.style.cursor = 'pointer';
+            });
+        }, 1000);
     </script>
 </body>
 </html>
