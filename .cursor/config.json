@@ -1,0 +1,30 @@
+{
+    "commands": {
+      "Deploy GitHub": {
+        "shell": "bash",
+        "args": [
+          "-c",
+          "git add . && git commit -m '🚀 Deploy automático - $(date +'%d/%m/%Y %H:%M:%S')' && git push origin main"
+        ]
+      },
+      "Deploy Direto": {
+        "shell": "powershell",
+        "args": [
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "Write-Host '🚀 Deploy direto iniciado...' -ForegroundColor Green; git add .; git commit -m 'Deploy direto - $(Get-Date -Format \"dd/MM/yyyy HH:mm:ss\")'; git push origin main; Write-Host '✅ Deploy direto concluído!' -ForegroundColor Green"
+        ]
+      },
+      "Deploy Rápido": {
+        "shell": "powershell", 
+        "args": [
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "Write-Host '⚡ Deploy rápido...' -ForegroundColor Yellow; git add .; git commit -m 'Deploy rápido'; git push origin main; Write-Host '✅ Pronto!' -ForegroundColor Green"
+        ]
+      }
+    }
+  }
+  
