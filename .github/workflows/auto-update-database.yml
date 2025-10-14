@@ -1,0 +1,56 @@
+name: 🗄️ Auto Update Database - HELMER ACADEMY
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'auto_update_database.php' ]
+  workflow_dispatch:
+
+jobs:
+  update-database:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 🐘 Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: pdo, pdo_mysql
+        
+    - name: 🔧 Install Dependencies
+      run: |
+        composer install --no-dev --optimize-autoloader
+        
+    - name: 🗄️ Execute Database Update
+      run: |
+        echo "🚀 Executando atualização automática do banco de dados..."
+        php auto_update_database.php
+        
+    - name: ✅ Verify Update Success
+      run: |
+        echo "✅ Verificando se a atualização foi bem-sucedida..."
+        if [ -f "database_updated.flag" ]; then
+          echo "✅ Banco de dados atualizado com sucesso!"
+        else
+          echo "❌ Falha na atualização do banco de dados"
+          exit 1
+        fi
+        
+    - name: 🧹 Cleanup
+      run: |
+        echo "🧹 Limpando arquivos temporários..."
+        rm -f auto_update_database.php
+        rm -f update_database.php
+        rm -f rollback_database.php
+        rm -f database_updates.sql
+        
+    - name: 📤 Commit Changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "🗄️ Database updated automatically - $(date)" || exit 0
+        git push origin main || exit 0
