@@ -55,172 +55,468 @@ try {
   <title><?php echo htmlspecialchars($produto['nome']); ?> | HELMER ACADEMY</title>
   <meta name="description" content="<?php echo htmlspecialchars($produto['descricao_curta']); ?>">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../css/style.css">
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .neon-box {
-      box-shadow: 0 0 10px #f00, 0 0 20px #f00;
-      transition: box-shadow 0.3s ease-in-out;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, #000000 0%, #1a0000 25%, #2d0000 50%, #1a0000 75%, #000000 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 8s ease infinite;
     }
-    .neon-box:hover {
-      box-shadow: 0 0 20px #f00, 0 0 40px #f00;
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
-    .titulo-section {
-      color: #fff;
-      text-shadow: 0 0 5px red;
+
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
+
+    .card-premium {
+        background: linear-gradient(145deg, rgba(220,38,38,0.1) 0%, rgba(0,0,0,0.3) 50%, rgba(220,38,38,0.05) 100%);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(220,38,38,0.3);
+        box-shadow: 0 8px 32px rgba(220,38,38,0.2), 0 0 0 1px rgba(255,255,255,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        transition: left 0.5s;
+    }
+
+    .card-premium:hover::before {
+        left: 100%;
+    }
+
+    .card-hover {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-hover:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 15px 30px rgba(220, 38, 38, 0.4), 0 0 20px rgba(220, 38, 38, 0.3);
+        border-color: rgba(220, 38, 38, 0.6);
+    }
+
+    .btn-premium {
+        background: linear-gradient(135deg, #dc2626, #ef4444, #f97316);
+        background-size: 200% 200%;
+        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        transition: all 0.3s ease;
+        animation: buttonPulse 2s ease-in-out infinite;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-premium:hover::before {
+        left: 100%;
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 30px rgba(220, 38, 38, 0.8);
+        animation: buttonGlow 0.5s ease-in-out;
+    }
+
+    @keyframes buttonPulse {
+        0%, 100% { 
+            background-position: 0% 50%; 
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); 
+        }
+        50% { 
+            background-position: 100% 50%; 
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6); 
+        }
+    }
+
+    @keyframes buttonGlow {
+        0% { box-shadow: 0 12px 30px rgba(220, 38, 38, 0.8); }
+        50% { box-shadow: 0 15px 40px rgba(220, 38, 38, 1); }
+        100% { box-shadow: 0 12px 30px rgba(220, 38, 38, 0.8); }
+    }
+
+    .dopamine-text {
+        background: linear-gradient(45deg, #dc2626, #ef4444, #f97316, #dc2626);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: textShimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes textShimmer {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .particle {
+        position: absolute;
+        background: radial-gradient(circle, rgba(220,38,38,0.8) 0%, rgba(220,38,38,0.2) 50%, transparent 100%);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: particleFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes particleFloat {
+        0%, 100% { 
+            transform: translateY(0px) scale(1); 
+            opacity: 0.7; 
+        }
+        50% { 
+            transform: translateY(-20px) scale(1.2); 
+            opacity: 1; 
+        }
+    }
+
+    .glow-effect {
+        filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5));
+        animation: glowPulse 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowPulse {
+        0% { filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5)); }
+        100% { filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8)); }
+    }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fade-in.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
     .scroll-reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s ease-out;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s ease-out;
     }
+
     .scroll-reveal.show {
-      opacity: 1;
-      transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
     }
+
     /* Mantém as quebras de linha na descrição longa */
     .descricao-longa {
-      white-space: pre-line;
+        white-space: pre-line;
     }
-    /* Botão hover */
-    .btn-comprar:hover {
-      background-color: #b91c1c; /* vermelho mais escuro */
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+
+    /* Garantir que o scroll funcione */
+    html, body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 100%;
+    }
+
+    .main-content {
+        overflow-y: auto;
+        height: 100vh;
+        -webkit-overflow-scrolling: touch;
     }
   </style>
 </head>
-<body class="bg-gradient-to-b from-black via-gray-900 to-black text-white font-sans overflow-x-hidden">
+<body class="gradient-bg text-white font-sans min-h-screen relative overflow-hidden">
 
-  <div class="flex flex-col md:flex-row min-h-screen">
+  <!-- Partículas de fundo -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="particle w-3 h-3 top-1/4 left-1/4" style="animation-delay: 0s;"></div>
+    <div class="particle w-4 h-4 top-1/3 right-1/4" style="animation-delay: 1s;"></div>
+    <div class="particle w-2 h-2 bottom-1/4 left-1/3" style="animation-delay: 2s;"></div>
+    <div class="particle w-3 h-3 bottom-1/3 right-1/3" style="animation-delay: 3s;"></div>
+    <div class="particle w-2 h-2 top-1/2 left-1/2" style="animation-delay: 4s;"></div>
+    <div class="particle w-4 h-4 top-3/4 right-1/3" style="animation-delay: 5s;"></div>
+  </div>
+
+  <div class="flex flex-col md:flex-row min-h-screen relative z-10" x-data="{ sidebarOpen: false }">
     <!-- Menu lateral -->
-    <aside id="menu" class="fixed top-0 left-0 z-50 bg-black/90 backdrop-blur-md text-white w-full max-w-xs h-full p-6 space-y-6 transform -translate-x-full transition-transform duration-300 md:translate-x-0 md:relative md:block md:w-56 md:min-h-screen">
+    <aside class="fixed top-0 left-0 z-50 bg-black/90 backdrop-blur-lg text-white w-full max-w-xs h-full p-6 space-y-6 transform -translate-x-full transition-transform duration-300 md:translate-x-0 md:relative md:block md:w-64 md:min-h-screen glass-effect"
+           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
       <div class="flex justify-center items-center mb-4 relative">
-        <span class="text-xl font-extrabold tracking-widest text-center">HELMER ACADEMY</span>
-        <button aria-label="Fechar menu" class="md:hidden text-white text-2xl absolute top-0 right-0 mt-4 mr-4" onclick="fecharMenu()">&times;</button>
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center">
+            <i class="fas fa-graduation-cap text-white text-lg"></i>
+          </div>
+          <span class="text-xl font-extrabold tracking-widest text-center dopamine-text">HELMER ACADEMY</span>
+        </div>
+        <button @click="sidebarOpen = false" class="md:hidden text-white text-2xl absolute top-0 right-0 mt-4 mr-4 hover:text-red-400 transition-colors">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <nav class="flex flex-col items-center space-y-3">
-        <a href="../index.php" class="hover:bg-red-700 rounded px-4 py-2 w-full text-center">Início</a>
-        <a href="../index.php#cursos" class="hover:bg-red-700 rounded px-4 py-2 w-full text-center">Cursos</a>
-        <a href="../pages/produtos.php" class="hover:bg-red-700 rounded px-4 py-2 w-full text-center">Produtos</a>
+      <nav class="flex flex-col space-y-3">
+        <a href="../index.php" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-red-700/30 transition-all duration-300 group">
+          <i class="fas fa-home text-red-400 group-hover:text-white transition-colors"></i>
+          <span class="group-hover:text-white transition-colors">Início</span>
+        </a>
+        <a href="../index.php#cursos" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-red-700/30 transition-all duration-300 group">
+          <i class="fas fa-play-circle text-red-400 group-hover:text-white transition-colors"></i>
+          <span class="group-hover:text-white transition-colors">Cursos</span>
+        </a>
+        <a href="../produtos.php" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-red-700/30 transition-all duration-300 group">
+          <i class="fas fa-shopping-bag text-red-400 group-hover:text-white transition-colors"></i>
+          <span class="group-hover:text-white transition-colors">Produtos</span>
+        </a>
+        <a href="../chat.php" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-red-700/30 transition-all duration-300 group">
+          <i class="fas fa-comments text-red-400 group-hover:text-white transition-colors"></i>
+          <span class="group-hover:text-white transition-colors">Chat</span>
+        </a>
       </nav>
     </aside>
 
+    <!-- Overlay para mobile -->
+    <div x-show="sidebarOpen" @click="sidebarOpen = false" 
+         class="fixed inset-0 bg-black/50 z-40 md:hidden"></div>
+
     <!-- Conteúdo principal -->
-    <div class="flex-1 ml-0 md:ml-56">
-      <main class="p-4 space-y-8 bg-white/10 backdrop-blur-md rounded-xl">
+    <div class="flex-1 ml-0 md:ml-64">
+      <main class="p-4 md:p-8 space-y-8 main-content">
 
         <!-- Topo mobile -->
-        <div class="md:hidden mb-4 flex items-center gap-4">
-          <button aria-label="Abrir menu" onclick="abrirMenu()" class="p-2 bg-red-700 rounded">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+        <div class="md:hidden mb-6 flex items-center justify-between">
+          <button @click="sidebarOpen = true" class="p-3 bg-red-600/20 backdrop-blur-sm rounded-xl border border-red-500/30 hover:bg-red-600/30 transition-all duration-300">
+            <i class="fas fa-bars text-red-400"></i>
           </button>
-          <span class="text-center text-xl font-bold">HELMER ACADEMY</span>
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center">
+              <i class="fas fa-graduation-cap text-white text-sm"></i>
+            </div>
+            <span class="text-lg font-bold dopamine-text">HELMER ACADEMY</span>
+          </div>
         </div>
 
         <!-- Banner do produto -->
-        <div class="scroll-reveal">
-          <img src="<?php echo htmlspecialchars($produto['imagem']); ?>" alt="<?php echo htmlspecialchars($produto['nome']); ?>" loading="lazy" class="w-full rounded-xl shadow-lg neon-box" />
+        <div class="scroll-reveal card-premium rounded-2xl overflow-hidden">
+          <img src="<?php echo htmlspecialchars($produto['imagem']); ?>" 
+               alt="<?php echo htmlspecialchars($produto['nome']); ?>" 
+               loading="lazy" 
+               class="w-full h-64 md:h-96 object-cover glow-effect" />
         </div>
 
         <!-- Nome do produto -->
-        <h1 class="scroll-reveal titulo-section text-2xl md:text-3xl"><?php echo htmlspecialchars($produto['nome']); ?></h1>
+        <h1 class="scroll-reveal text-3xl md:text-5xl font-bold text-center dopamine-text mb-4">
+          <?php echo htmlspecialchars($produto['nome']); ?>
+        </h1>
 
         <!-- Preço -->
-        <div class="scroll-reveal text-center">
-          <span class="text-pink-400 text-3xl font-bold">R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?></span>
+        <div class="scroll-reveal text-center mb-8">
+          <div class="inline-block bg-gradient-to-r from-red-600 to-red-800 px-8 py-4 rounded-2xl shadow-2xl">
+            <span class="text-4xl md:text-5xl font-bold text-white">
+              R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?>
+            </span>
+          </div>
         </div>
 
         <!-- Descrição longa -->
-        <div class="scroll-reveal space-y-4 text-gray-300 text-sm md:text-base descricao-longa">
-          <p><?php echo htmlspecialchars($produto['descricao_longa']); ?></p>
+        <div class="scroll-reveal card-premium p-6 md:p-8 space-y-4 text-gray-300 text-sm md:text-base descricao-longa">
+          <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+            <i class="fas fa-info-circle text-red-400 mr-3"></i>
+            Descrição
+          </h2>
+          <p class="leading-relaxed"><?php echo htmlspecialchars($produto['descricao_longa']); ?></p>
         </div>
 
         <!-- Botão de compra -->
         <div class="scroll-reveal text-center">
-          <a href="<?php echo htmlspecialchars($produto['link_compra']); ?>" target="_blank" rel="noopener noreferrer" class="btn-comprar inline-block bg-red-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg neon-box transition duration-300">Comprar Agora</a>
+          <a href="<?php echo htmlspecialchars($produto['link_compra']); ?>" 
+             target="_blank" 
+             rel="noopener noreferrer" 
+             class="btn-premium inline-flex items-center space-x-3 text-white font-bold px-8 py-4 rounded-2xl text-lg transition-all duration-300">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Comprar Agora</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
 
         <!-- Benefícios -->
         <?php if(!empty($produto['beneficios'])): ?>
-        <section class="scroll-reveal">
-          <h2 class="titulo-section text-xl md:text-2xl mb-4">Benefícios</h2>
-          <ul class="space-y-2 list-disc list-inside text-gray-300">
+        <section class="scroll-reveal card-premium p-6 md:p-8">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center">
+            <i class="fas fa-star text-red-400 mr-3"></i>
+            Benefícios
+          </h2>
+          <ul class="space-y-4">
             <?php
               $beneficios = explode("\n", $produto['beneficios']);
               foreach ($beneficios as $b) {
                 $b = trim($b);
-                if ($b) echo "<li>" . htmlspecialchars($b) . "</li>";
+                if ($b) {
+                  echo "<li class='flex items-start space-x-3 text-gray-300'>
+                          <i class='fas fa-check-circle text-red-400 mt-1 flex-shrink-0'></i>
+                          <span>" . htmlspecialchars($b) . "</span>
+                        </li>";
+                }
               }
             ?>
           </ul>
         </section>
         <?php endif; ?>
 
-      </main>
-      
-      <section id="comentarios" class="fade-in pt-8 mt-8 border-t border-gray-700">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6">Comentários (<span class="text-rose-400"><?= count($comentarios) ?></span>)</h2>
+        <!-- Seção de Comentários -->
+        <section class="fade-in pt-8 mt-8 border-t border-gray-700/50">
+          <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center">
+            <i class="fas fa-comments text-red-400 mr-3"></i>
+            Comentários 
+            <span class="text-red-400 ml-2">(<?= count($comentarios) ?>)</span>
+          </h2>
 
-    <?php if (isset($_SESSION['user_id'])): ?>
-    <div class="bg-gray-800 p-6 rounded-2xl mb-8">
-        <form action="adicionar_comentario.php" method="POST" class="space-y-4">
-            <input type="hidden" name="conteudo_id" value="<?php echo $id; ?>">
-            <input type="hidden" name="tipo_conteudo" value="produto"> 
-            <textarea name="comentario" rows="4" placeholder="Deixe seu comentário ou dúvida..." required class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-rose-500"></textarea>
-            <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-6 rounded-lg transition">Enviar Comentário</button>
-        </form>
-    </div>
-    <?php else: ?>
-    <div class="bg-gray-800 p-6 rounded-2xl mb-8 text-center">
-        <p><a href="login.php" class="text-rose-400 font-semibold hover:underline">Faça login</a> para deixar um comentário.</p>
-    </div>
-    <?php endif; ?>
+          <?php if (isset($_SESSION['user_id'])): ?>
+          <div class="card-premium p-6 rounded-2xl mb-8">
+            <form action="adicionar_comentario.php" method="POST" class="space-y-4">
+              <input type="hidden" name="conteudo_id" value="<?php echo $id; ?>">
+              <input type="hidden" name="tipo_conteudo" value="produto"> 
+              <div class="space-y-4">
+                <label class="block text-sm font-medium text-gray-300">
+                  <i class="fas fa-comment mr-2"></i>
+                  Deixe seu comentário ou dúvida
+                </label>
+                <textarea name="comentario" 
+                          rows="4" 
+                          placeholder="Compartilhe sua experiência com este produto..." 
+                          required 
+                          class="w-full p-4 rounded-xl bg-gray-800/50 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 resize-none"></textarea>
+                <button type="submit" 
+                        class="btn-premium text-white font-bold py-3 px-6 rounded-xl transition-all duration-300">
+                  <i class="fas fa-paper-plane mr-2"></i>
+                  Enviar Comentário
+                </button>
+              </div>
+            </form>
+          </div>
+          <?php else: ?>
+          <div class="card-premium p-6 rounded-2xl mb-8 text-center">
+            <div class="flex items-center justify-center space-x-3 text-gray-400">
+              <i class="fas fa-lock"></i>
+              <p>
+                <a href="../login.php" class="text-red-400 font-semibold hover:text-red-300 hover:underline transition-colors">
+                  Faça login
+                </a> 
+                para deixar um comentário.
+              </p>
+            </div>
+          </div>
+          <?php endif; ?>
 
-    <div class="space-y-6">
-        <?php if (count($comentarios) > 0): ?>
-            <?php foreach ($comentarios as $comentario): ?>
-                <div id="comentario-<?= $comentario['id'] ?>" class="flex gap-4 bg-gray-800/50 p-4 rounded-xl">
+          <div class="space-y-6">
+            <?php if (count($comentarios) > 0): ?>
+              <?php foreach ($comentarios as $comentario): ?>
+                <div id="comentario-<?= $comentario['id'] ?>" class="card-premium p-6 rounded-xl">
+                  <div class="flex gap-4">
                     <div class="flex-shrink-0">
-                        <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-rose-400">
-                            <?= strtoupper(substr($comentario['username'], 0, 1)) ?>
-                        </div>
+                      <div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center font-bold text-white text-lg">
+                        <?= strtoupper(substr($comentario['username'], 0, 1)) ?>
+                      </div>
                     </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-white"><?= htmlspecialchars($comentario['username']) ?></span>
-                            <span class="text-xs text-gray-500"><?= date('d/m/Y \à\s H:i', strtotime($comentario['data_publicacao'])) ?></span>
-                        </div>
-                        <p class="text-gray-300 mt-2"><?= nl2br(htmlspecialchars($comentario['comentario'])) ?></p>
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <span class="font-bold text-white text-lg"><?= htmlspecialchars($comentario['username']) ?></span>
+                        <span class="text-xs text-gray-500 bg-gray-800/50 px-2 py-1 rounded-full">
+                          <?= date('d/m/Y \à\s H:i', strtotime($comentario['data_publicacao'])) ?>
+                        </span>
+                      </div>
+                      <p class="text-gray-300 leading-relaxed"><?= nl2br(htmlspecialchars($comentario['comentario'])) ?></p>
                     </div>
+                  </div>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="text-center text-gray-500">Ainda não há comentários. Seja o primeiro a comentar!</p>
-        <?php endif; ?>
-    </div>
-</section>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <div class="card-premium p-8 rounded-2xl text-center">
+                <i class="fas fa-comment-slash text-4xl text-gray-500 mb-4"></i>
+                <p class="text-gray-500 text-lg">Ainda não há comentários. Seja o primeiro a comentar!</p>
+              </div>
+            <?php endif; ?>
+          </div>
+        </section>
 
-      <footer class="text-center py-6 text-gray-500 text-xs mt-8">© 2025 Área restrita | Só pra quem tá no jogo</footer>
+        <!-- Footer -->
+        <footer class="text-center py-8 text-gray-500 text-sm mt-12">
+          <div class="flex items-center justify-center space-x-2 mb-4">
+            <div class="w-6 h-6 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center">
+              <i class="fas fa-graduation-cap text-white text-xs"></i>
+            </div>
+            <span class="font-bold">HELMER ACADEMY</span>
+          </div>
+          <p>© <?php echo date('Y'); ?> Área restrita | Só pra quem tá no jogo</p>
+        </footer>
+      </main>
     </div>
   </div>
 
   <!-- Botão WhatsApp -->
-  <a href="https://wa.me/5551996148568" target="_blank" rel="noopener noreferrer" aria-label="Fale no WhatsApp" class="fixed bottom-4 right-4 z-50 bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg transition duration-300 animate-bounce">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="white" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20.52 3.48A11.89 11.89 0 0 0 12.004 0c-6.63 0-12 5.37-12 12a11.93 11.93 0 0 0 1.69 6.09L0 24l5.92-1.55A11.89 11.89 0 0 0 12.004 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.65 0-3.26-.38-4.69-1.09l-.34-.18-3.52.92.94-3.43-.22-.35A9.956 9.956 0 0 1 2 12c0-5.51 4.49-10 10-10s10 4.49 10 10-4.49 10-10 10zm5.04-7.49c-.27-.14-1.6-.79-1.85-.88-.25-.09-.44-.14-.62.14s-.71.88-.87 1.06c-.16.18-.32.2-.59.07-.27-.14-1.15-.42-2.18-1.35-.8-.72-1.35-1.61-1.51-1.88-.16-.27-.02-.42.12-.56.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.62-1.5-.84-2.05-.22-.53-.43-.46-.62-.47-.16-.01-.34-.02-.52-.02s-.48.07-.73.35c-.25.27-.96.94-.96 2.29s.99 2.66 1.13 2.84c.14.18 1.95 2.97 4.73 4.17.66.28 1.17.45 1.57.58.66.21 1.27.18 1.74.11.53-.08 1.6-.65 1.83-1.27.23-.62.23-1.15.16-1.27-.07-.12-.25-.18-.52-.32z"/>
-    </svg>
+  <a href="https://wa.me/5551996148568" 
+     target="_blank" 
+     rel="noopener noreferrer" 
+     aria-label="Fale no WhatsApp" 
+     class="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 glow-effect">
+    <i class="fab fa-whatsapp text-2xl"></i>
   </a>
 
   <script>
-    function abrirMenu() { document.getElementById('menu').classList.remove('-translate-x-full'); }
-    function fecharMenu() { document.getElementById('menu').classList.add('-translate-x-full'); }
-
+    // Animações de scroll
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('show');
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Partículas interativas
+    document.addEventListener('mousemove', function(e) {
+      const particles = document.querySelectorAll('.particle');
+      particles.forEach((particle, index) => {
+        const speed = (index + 1) * 0.1;
+        const x = e.clientX * speed / 100;
+        const y = e.clientY * speed / 100;
+        particle.style.transform = `translate(${x}px, ${y}px)`;
       });
     });
-    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+    // Forçar scroll habilitado
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.height = 'auto';
+      document.documentElement.style.height = 'auto';
+      console.log('Página de produto carregada com sucesso');
+    });
   </script>
 </body>
 </html>
