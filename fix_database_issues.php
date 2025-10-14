@@ -205,6 +205,20 @@ if (!isset($_SESSION['user']) || ($_SESSION['role'] ?? '') !== 'admin') {
         async function runDiagnosis() {
             try {
                 const response = await fetch('?action=diagnosis');
+                
+                // Verificar se a resposta é válida
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                // Verificar o tipo de conteúdo
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    console.error('Resposta não é JSON:', text);
+                    throw new Error('Resposta do servidor não é JSON válido');
+                }
+                
                 const data = await response.json();
                 
                 updateIndicators(data);
@@ -216,8 +230,26 @@ if (!isset($_SESSION['user']) || ($_SESSION['role'] ?? '') !== 'admin') {
                 document.getElementById('diagnosis-content').innerHTML = `
                     <div class="bg-red-800/50 p-4 rounded-lg">
                         <p class="text-red-400">❌ Erro no diagnóstico: ${error.message}</p>
+                        <p class="text-sm text-gray-400 mt-2">Verifique se o servidor está funcionando corretamente</p>
                     </div>
                 `;
+                
+                // Mostrar indicadores de erro
+                document.getElementById('connection-indicator').className = 'w-3 h-3 rounded-full bg-red-500';
+                document.getElementById('connection-message').textContent = 'Erro na verificação';
+                document.getElementById('connection-message').className = 'text-sm text-red-400';
+                
+                document.getElementById('tables-indicator').className = 'w-3 h-3 rounded-full bg-red-500';
+                document.getElementById('tables-message').textContent = 'Erro na verificação';
+                document.getElementById('tables-message').className = 'text-sm text-red-400';
+                
+                document.getElementById('files-indicator').className = 'w-3 h-3 rounded-full bg-red-500';
+                document.getElementById('files-message').textContent = 'Erro na verificação';
+                document.getElementById('files-message').className = 'text-sm text-red-400';
+                
+                document.getElementById('permissions-indicator').className = 'w-3 h-3 rounded-full bg-red-500';
+                document.getElementById('permissions-message').textContent = 'Erro na verificação';
+                document.getElementById('permissions-message').className = 'text-sm text-red-400';
             }
         }
 
@@ -380,15 +412,28 @@ if (!isset($_SESSION['user']) || ($_SESSION['role'] ?? '') !== 'admin') {
             
             try {
                 const response = await fetch('?action=fix_connection');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    console.error('Resposta não é JSON:', text);
+                    throw new Error('Resposta do servidor não é JSON válido');
+                }
+                
                 const data = await response.json();
                 
                 if (data.success) {
                     alert('✅ Conexão corrigida com sucesso!');
                     runDiagnosis();
                 } else {
-                    alert('❌ Erro ao corrigir conexão: ' + data.error);
+                    alert('❌ Erro ao corrigir conexão: ' + (data.error || 'Erro desconhecido'));
                 }
             } catch (error) {
+                console.error('Erro ao corrigir conexão:', error);
                 alert('❌ Erro: ' + error.message);
             } finally {
                 button.innerHTML = originalText;
@@ -478,24 +523,53 @@ if (!isset($_SESSION['user']) || ($_SESSION['role'] ?? '') !== 'admin') {
 <?php
 // Processar ações AJAX
 if (isset($_GET['action'])) {
-    header('Content-Type: application/json');
+    // Limpar qualquer output anterior
+    ob_clean();
     
-    switch ($_GET['action']) {
-        case 'diagnosis':
-            echo json_encode(runCompleteDiagnosis());
-            break;
-        case 'fix_connection':
-            echo json_encode(fixConnection());
-            break;
-        case 'fix_tables':
-            echo json_encode(fixTables());
-            break;
-        case 'fix_files':
-            echo json_encode(fixFiles());
-            break;
-        case 'fix_all':
-            echo json_encode(fixAll());
-            break;
+    // Definir headers corretos
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-cache, must-revalidate');
+    
+    try {
+        $result = null;
+        
+        switch ($_GET['action']) {
+            case 'diagnosis':
+                $result = runCompleteDiagnosis();
+                break;
+            case 'fix_connection':
+                $result = fixConnection();
+                break;
+            case 'fix_tables':
+                $result = fixTables();
+                break;
+            case 'fix_files':
+                $result = fixFiles();
+                break;
+            case 'fix_all':
+                $result = fixAll();
+                break;
+            default:
+                $result = ['success' => false, 'error' => 'Ação não reconhecida'];
+        }
+        
+        // Garantir que o resultado é válido
+        if ($result === null) {
+            $result = ['success' => false, 'error' => 'Erro interno do servidor'];
+        }
+        
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        
+    } catch (Exception $e) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Erro interno: ' . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    } catch (Error $e) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Erro fatal: ' . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
     }
     exit;
 }
