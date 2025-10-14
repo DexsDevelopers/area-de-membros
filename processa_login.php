@@ -5,6 +5,9 @@ session_start();
 // Inclui o arquivo de conexão com o banco de dados.
 require 'config.php';
 
+// Inclui as funções do sistema "Lembre-me"
+require 'remember_me_functions.php';
+
 // Garante que o script só seja acessado via método POST.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     // Se não for POST, redireciona para a página de login.
@@ -20,6 +23,7 @@ error_log("Login iniciado em: " . date('Y-m-d H:i:s'));
 // ----------------------------------------------------
 $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
+$remember_me = isset($_POST['remember']); // Verifica se "Lembre-me" foi marcado
 
 // Se algum campo estiver vazio, redireciona de volta com um erro.
 if (empty($username) || empty($password)) {
@@ -71,6 +75,24 @@ if ($user && password_verify($password, $user['password'])) {
     $_SESSION['user_id'] = $user['id'];       // O ID é útil para várias operações.
     $_SESSION['user'] = $user['username']; // O nome de usuário para saudação.
     $_SESSION['role'] = $user['role'];       // A 'role' para controle de acesso ('admin' ou 'user').
+    
+    // 4. PROCESSAR "LEMBRE-ME" SE SOLICITADO
+    // ----------------------------------------------------
+    if ($remember_me) {
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+        
+        // Criar token de "Lembre-me"
+        $token = createRememberToken($user['id'], $user_agent, $ip_address);
+        
+        if ($token) {
+            // Definir cookie seguro
+            setRememberMeCookie($token, 30); // 30 dias
+            error_log("Token 'Lembre-me' criado para usuário: " . $user['username']);
+        } else {
+            error_log("Erro ao criar token 'Lembre-me' para usuário: " . $user['username']);
+        }
+    }
     
     $totalTime = microtime(true) - $startTime;
     error_log("Login bem-sucedido em: " . round($totalTime * 1000, 2) . "ms");
