@@ -149,9 +149,14 @@ if (isset($_GET['error'])) {
                                class="w-4 h-4 rounded bg-gray-700 border-gray-600 text-red-600 focus:ring-red-500 focus:ring-2">
                         <span class="ml-2 text-gray-300 group-hover:text-white transition-colors">Lembrar-me</span>
                     </label>
-                    <a href="#" class="text-sm text-red-400 hover:text-red-300 hover:underline transition-colors">
-                        Esqueceu a senha?
-                    </a>
+                    <div class="flex items-center gap-3">
+                        <a href="registrar.php" class="text-sm text-red-400 hover:text-red-300 hover:underline transition-colors">
+                            Criar conta
+                        </a>
+                        <a href="#" class="text-sm text-red-400 hover:text-red-300 hover:underline transition-colors">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
                 </div>
                 
                 <!-- Botão de login -->
