@@ -52,12 +52,8 @@ try {
     // Limpar token de registro
     unset($_SESSION['csrf_token_register']);
 
-    // Autenticar automaticamente
-    $_SESSION['user_id'] = $userId;
-    $_SESSION['user'] = $username;
-    $_SESSION['role'] = 'user';
-
-    header('Location: index.php');
+    // Não autenticar automaticamente: redirecionar para login com mensagem
+    header('Location: login.php?registered=1');
     exit();
 } catch (Exception $e) {
     error_log('Erro no registro: ' . $e->getMessage());

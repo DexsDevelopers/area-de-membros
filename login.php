@@ -14,6 +14,12 @@ if (isset($_GET['error'])) {
             break;
     }
 }
+
+// Mensagem de sucesso pós-registro
+$successMessage = '';
+if (isset($_GET['registered'])) {
+    $successMessage = 'Conta criada com sucesso! Faça login para continuar.';
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -106,6 +112,14 @@ if (isset($_GET['error'])) {
                 <div class="bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-3 rounded-xl mb-6 text-center text-sm backdrop-blur-sm animate-fadeInUp">
                     <i class="fas fa-exclamation-triangle mr-2"></i>
                     <?php echo htmlspecialchars($errorMessage); ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Mensagem de sucesso -->
+            <?php if ($successMessage): ?>
+                <div class="bg-green-500/20 border border-green-500/50 text-green-300 px-4 py-3 rounded-xl mb-6 text-center text-sm backdrop-blur-sm animate-fadeInUp">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <?php echo htmlspecialchars($successMessage); ?>
                 </div>
             <?php endif; ?>
 
