@@ -35,7 +35,7 @@ if ($id <= 0) {
 try {
     // Busca todos os dados necessários em um único bloco try...catch
     $stmt = $pdo->prepare(
-        "SELECT id, titulo, descricao, imagem, data_postagem, tipo, link, video, topicos FROM cursos WHERE id = ?"
+        "SELECT id, titulo, descricao, imagem, data_postagem, tipo, link, video, topicos, categoria_id FROM cursos WHERE id = ?"
     );
     $stmt->execute([$id]);
     $curso = $stmt->fetch();
@@ -63,6 +63,30 @@ try {
     // Busca as categorias para o menu
     $categorias_menu = $pdo->query("SELECT * FROM categorias ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
 
+    // Estado: já é favorito?
+    $isFavorito = false;
+    if (isset($_SESSION['user_id'])) {
+        $favStmt = $pdo->prepare("SELECT COUNT(*) FROM favoritos WHERE user_id = ? AND curso_id = ?");
+        $favStmt->execute([$_SESSION['user_id'], $id]);
+        $isFavorito = (bool)$favStmt->fetchColumn();
+    }
+
+    // Cursos relacionados (mesma categoria)
+    $relacionados = [];
+    try {
+        if (!empty($curso['categoria_id'])) {
+            $relStmt = $pdo->prepare(
+                "SELECT id, titulo, imagem, tipo, data_postagem FROM cursos 
+                 WHERE ativo = 1 AND id <> ? AND categoria_id = ? 
+                 ORDER BY data_postagem DESC LIMIT 6"
+            );
+            $relStmt->execute([$id, $curso['categoria_id']]);
+            $relacionados = $relStmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+    } catch (PDOException $e) {
+        $relacionados = [];
+    }
+
 } catch (PDOException $e) {
     error_log("Erro na página do curso (ID: $id): " . $e->getMessage());
     die("Ocorreu um erro ao carregar a página do curso.");
@@ -88,6 +112,10 @@ $embedUrl = !empty($curso['video']) ? getYouTubeEmbedUrl($curso['video']) : '';
         .titulo-section { color: #fff; text-shadow: 0 0 5px #f43f5e, 0 0 10px #f43f5e; }
         .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
         .fade-in.show { opacity: 1; transform: translateY(0); }
+        .hero-banner { position: relative; border-radius: 1rem; overflow: hidden; }
+        .hero-banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.75)); }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
 <body class="bg-gradient-to-b from-black via-gray-900 to-black text-white font-sans">
@@ -123,6 +151,34 @@ $embedUrl = !empty($curso['video']) ? getYouTubeEmbedUrl($curso['video']) : '';
     </aside>
 
     <main class="flex-1 md:ml-64 p-4 sm:p-6 lg:p-8">
+        <!-- Hero / Cabeçalho do Curso -->
+        <section class="mb-8">
+            <div class="hero-banner h-56 sm:h-64 md:h-72 lg:h-80">
+                <img src="/<?php echo htmlspecialchars($curso['imagem']); ?>" alt="Banner do curso" class="w-full h-full object-cover">
+            </div>
+            <div class="mt-4 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full <?php echo ($curso['tipo'] === 'premium') ? 'bg-purple-600 text-white' : 'bg-green-600 text-white'; ?>"><?php echo ucfirst($curso['tipo']); ?></span>
+                        <span class="px-2 py-1 text-xs rounded-full bg-white/10 border border-white/10"><?php echo date("d/m/Y", strtotime($curso['data_postagem'])); ?></span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold leading-tight "><?php echo htmlspecialchars($curso['titulo']); ?></h1>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="fav-btn" onclick="toggleFavorite(<?php echo $id; ?>)" 
+                            class="px-4 py-2 rounded-lg border border-white/10 bg-white/10 hover:bg-white/20 transition flex items-center gap-2"
+                            data-favorited="<?php echo $isFavorito ? '1' : '0'; ?>">
+                        <i class="fas fa-heart"></i>
+                        <span class="text-sm"><?php echo $isFavorito ? 'Remover favorito' : 'Adicionar favorito'; ?></span>
+                    </button>
+                    <button onclick="shareCourse()" class="px-4 py-2 rounded-lg border border-white/10 bg-white/10 hover:bg-white/20 transition flex items-center gap-2">
+                        <i class="fas fa-share-alt"></i>
+                        <span class="text-sm">Compartilhar</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             <div class="lg:col-span-2 space-y-10">
                 <?php if ($embedUrl): ?>
@@ -206,6 +262,31 @@ $embedUrl = !empty($curso['video']) ? getYouTubeEmbedUrl($curso['video']) : '';
                 </div>
             </div>
         </div>
+
+        <!-- Cursos Relacionados -->
+        <?php if (!empty($relacionados)): ?>
+        <section class="mt-12">
+            <h2 class="text-2xl font-bold mb-6">Cursos relacionados</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($relacionados as $r): ?>
+                <a href="curso_pagina.php?id=<?= $r['id'] ?>" class="bg-gray-800/60 border border-gray-700 rounded-2xl overflow-hidden hover:bg-gray-800 transition group">
+                    <?php if (!empty($r['imagem'])): ?>
+                        <img src="/<?= htmlspecialchars($r['imagem']) ?>" alt="<?= htmlspecialchars($r['titulo']) ?>" class="w-full h-40 object-cover group-hover:opacity-90">
+                    <?php else: ?>
+                        <div class="w-full h-40 bg-gray-700 flex items-center justify-center"><i class="fas fa-graduation-cap text-3xl text-gray-500"></i></div>
+                    <?php endif; ?>
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full <?= $r['tipo'] === 'premium' ? 'bg-purple-600 text-white' : 'bg-green-600 text-white' ?>"><?= ucfirst($r['tipo']) ?></span>
+                            <span class="text-xs text-gray-400"><?= date('d/m/Y', strtotime($r['data_postagem'])) ?></span>
+                        </div>
+                        <h3 class="font-semibold line-clamp-2"><?= htmlspecialchars($r['titulo']) ?></h3>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endif; ?>
     </main>
 </div>
 
@@ -219,6 +300,49 @@ $embedUrl = !empty($curso['video']) ? getYouTubeEmbedUrl($curso['video']) : '';
         });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Favoritos
+    async function toggleFavorite(id) {
+        try {
+            const btn = document.getElementById('fav-btn');
+            const form = new FormData();
+            form.append('action', 'toggle');
+            form.append('curso_id', id);
+            const res = await fetch('favoritos.php', { method: 'POST', body: form });
+            const data = await res.json();
+            if (data.status === 'added') {
+                btn.dataset.favorited = '1';
+                btn.querySelector('span').textContent = 'Remover favorito';
+            } else if (data.status === 'removed') {
+                btn.dataset.favorited = '0';
+                btn.querySelector('span').textContent = 'Adicionar favorito';
+            }
+            showToast(data.message || 'Atualizado');
+        } catch (e) {
+            showToast('Erro ao atualizar favorito', 'error');
+        }
+    }
+
+    function showToast(message, type = 'info') {
+        const el = document.createElement('div');
+        el.className = `fixed bottom-6 right-6 z-50 px-4 py-3 rounded-lg shadow-lg text-white ${type==='error'?'bg-red-600':'bg-green-600'}`;
+        el.textContent = message;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2500);
+    }
+
+    function shareCourse() {
+        const url = window.location.href;
+        if (navigator.share) {
+            navigator.share({ title: document.title, url }).catch(() => copyToClipboard(url));
+        } else {
+            copyToClipboard(url);
+        }
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard?.writeText(text).then(() => showToast('Link copiado!'));
+    }
 </script>
 </body>
 </html>
